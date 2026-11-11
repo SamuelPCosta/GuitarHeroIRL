@@ -79,20 +79,40 @@ Demonstração: o app abre a webcam, desenha uma grade fixa de bolinhas e os pon
   - Pronto quando: ao fechar o app, aparece a tabela de tempos por estágio; o JSONL é válido e lido por um teste.
   - Ref.: RF-70, RNF-01
 
-- [ ] **T1.7 — Mãos com MediaPipe + verificação de lateralidade**
+- [x] **T1.7 — Mãos com MediaPipe + verificação de lateralidade** · concluída em 2026-11-11
   - Depende de: T1.5
   - Fazer: `HandLandmarker` em modo VIDEO; desenhar os 21 pontos; máscara das mãos (casco convexo dilatado); **experimento**: com imagem espelhada e não espelhada, levantar só a mão esquerda e registrar o rótulo retornado; definir `handedness_swap`; papel provisório pelo rótulo corrigido.
   - Pronto quando: tabela "entrada espelhada? × mão real → rótulo" preenchida aqui; com a configuração correta, a mão esquerda real é rotulada "notas" em ≥ 95% de 300 quadros.
   - Ref.: RF-10, RF-11 (provisório), RF-13, K5
-  - **Em andamento (2026-11-11)** — código pronto: `ghirl/hands/mp_tracker.py` (MediaPipe 1.2.2, modelo `models/hand_landmarker.task`), máscara das mãos (0,3 ms), desenho e rótulos legíveis com espelho, integração no laço (`--no-hands` desliga). Webcam, 300 quadros: MediaPipe 17,2 ms em média (P95 22 ms); total 20,9 ms/quadro (~48 FPS de processamento; limitado a 30 pela câmera). Chave renomeada para `hands.handedness_swap` (padrão `true`, a confirmar).
-  - Pendente (precisa do usuário): rodar `python -m ghirl.hands.handedness_check` e anotar a tabela aqui.
+  - Evidência: `ghirl/hands/mp_tracker.py` (MediaPipe 1.2.2), máscara das mãos (0,3 ms), desenho e rótulos legíveis com espelho, integração no laço (`--no-hands` desliga). Experimento (`python -m ghirl.hands.handedness_check`), rótulo bruto em quadros com 1 mão:
 
-- [ ] **T1.8 — Demo do Marco 1**
+    | Mão real | Imagem original | Imagem espelhada |
+    |---|---|---|
+    | esquerda | Left 54/54 | Right 53, Left 1 |
+    | direita | Right 59, Left 1 | Left 59/59 |
+
+    → Nesta câmera o rótulo já vem correto na imagem original: `hands.handedness_swap = false` (contrário do que a documentação do MediaPipe sugere).
+  - Mudança de escopo: o critério "≥ 95% de papel correto com o violão" saiu daqui. O papel definitivo vem da geometria em relação ao braço (T2.8), que já tem esse critério. O usuário preferiu não repetir testes cronometrados.
+
+- [x] **T1.8 — Demo do Marco 1** · concluída em 2026-11-11
+  - Evidência: o usuário rodou `python -m ghirl.app.main` ao vivo: 1396 quadros a **28,9 FPS** efetivos, 27,5 ms/quadro em média (P95 39,5 ms), MediaPipe 23,4 ms; 2 mãos detectadas em 438 quadros. Gravação e replay validados na T1.4.
   - Depende de: T1.4, T1.6, T1.7
   - Checklist: vídeo ao vivo + grade fixa + mãos + HUD; FPS médio ≥ 20 com MediaPipe ligado (anotar o número); gravação e replay da mesma sessão funcionando.
   - Ref.: CA-01, CA-03 (parte), RNF-01
 
 ---
+
+## Caminho rápido até a grade sobre o braço (decidido em 2026-11-11)
+
+A pedido do usuário, a ordem de execução prioriza ver **a grade sobre o braço real, calibrada pelas pestanas**, o quanto antes:
+
+1. T2.1 → T2.2 → T2.3 → T2.4 → T2.5 (achar e seguir o braço)
+2. T2.8 (papel das mãos pela geometria)
+3. T3.1 → T3.2 → T3.3 → T3.4 → T3.6 (pestanas → casas projetadas no braço)
+4. **Demo intermediária**: grade sobre o braço em movimento, calibrada por pestana.
+
+Ficam para depois dessa demo: T2.6 (só a parte mínima de "perdido" entra antes), T2.7, T2.9, T3.5, T3.7–T3.10.
+A captura da pestana é automática, sem contagem regressiva: dispara quando a pestana fica estável por `calib.hold_s` (padrão reduzido para 0,6 s).
 
 ## Marco 2 — Localização do braço (módulo A) + eixo
 

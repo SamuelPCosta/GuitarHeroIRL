@@ -2,6 +2,10 @@
 # NÃO adicionar opencv-python: o mediapipe já traz opencv-contrib-python.
 mediapipe==1.2.2
 opencv-contrib-python==5.0.0.93
+ultralytics==8.4.210     # SAM 2.1 / SAM 3 / YOLOE (instalar com --override overrides.txt)
+psutil==7.2.2
+httpx==0.28.1
+charset-normalizer==3.5.2
 numpy==2.5.4
 pyyaml==6.0.3
 pytest==9.2.0

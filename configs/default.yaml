@@ -42,7 +42,7 @@ calib:
   mode: 2p              # 2p | 2p_taper | 3p
   frets: [1, 12]        # casas da pestana (3p: [1, 12, 5])
   beta: 0.75            # posição do dedo dentro da casa (0 = traste anterior, 1 = traste da casa)
-  hold_s: 1.0
+  hold_s: 0.6           # tempo de pestana estável para capturar (s)
   scale_mm: 648.0       # Tagima Dallas (a medir)
   width_nut_mm: 43.0
   width_12_mm: 54.0

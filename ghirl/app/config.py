@@ -82,7 +82,7 @@ class CalibConfig:
     mode: Literal["2p", "2p_taper", "3p"] = "2p"
     frets: list[int] = field(default_factory=lambda: [1, 12])
     beta: float = 0.75
-    hold_s: float = 1.0
+    hold_s: float = 0.6  # tempo de pestana estável para capturar
     scale_mm: float = 648.0
     width_nut_mm: float = 43.0
     width_12_mm: float = 54.0

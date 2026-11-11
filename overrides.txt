@@ -1,0 +1,4 @@
+# Impede que dependências (ex.: ultralytics) puxem opencv-python, que conflita com o
+# opencv-contrib-python trazido pelo mediapipe (mesmo módulo cv2).
+opencv-python ; sys_platform == "never"
+opencv-python-headless ; sys_platform == "never"
