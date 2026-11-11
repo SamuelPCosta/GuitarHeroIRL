@@ -1,8 +1,10 @@
 """Mãos com MediaPipe Hand Landmarker (T1.7; RF-10, RF-11 provisório, RF-13).
 
-Lateralidade: o MediaPipe rotula a mão supondo imagem ESPELHADA (câmera "selfie"). Como o pipeline
-processa a imagem original (não espelhada), o rótulo bruto tende a sair trocado. A correção é a
-chave ``hands.handedness_swap`` (confirmada empiricamente com ``python -m ghirl.hands.handedness_check``).
+Lateralidade: a documentação do MediaPipe diz que o rótulo supõe imagem ESPELHADA, mas o experimento
+da T1.7 (MediaPipe 1.2.2, imagem original não espelhada) mostrou o rótulo CORRETO: mão esquerda real
+→ "Left" em 54/54 quadros, direita → "Right" em 59/60; na imagem espelhada os rótulos se invertem.
+Por isso ``hands.handedness_swap = false``. Reconfirmar com ``python -m ghirl.hands.handedness_check``
+se trocar de versão do MediaPipe.
 O papel definitivo de cada mão (notas/ritmo) virá da geometria em relação ao braço (T2.8).
 """
 

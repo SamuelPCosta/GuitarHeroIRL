@@ -54,7 +54,7 @@ class DisplayConfig:
 class HandsConfig:
     max_hands: int = 2
     min_conf: float = 0.5
-    handedness_swap: bool = True  # inverte o rótulo do MediaPipe (que supõe imagem espelhada); T1.7
+    handedness_swap: bool = False  # T1.7: nesta câmera o rótulo do MediaPipe já vem correto na imagem original
     fretting: Literal["left", "right"] = "left"
     model_path: str = "models/hand_landmarker.task"
 

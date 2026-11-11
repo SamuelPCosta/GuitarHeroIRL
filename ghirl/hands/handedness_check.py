@@ -51,8 +51,12 @@ def _big_text(img, text, y, scale=1.0, color=(255, 255, 255)):
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     add_config_args(parser)
+    parser.add_argument("--fases", default="esquerda,direita,violao",
+                        help="fases a rodar, ex.: --fases violao")
     args = parser.parse_args()
     cfg = config_from_args(args)
+    wanted = [p.strip() for p in args.fases.split(",") if p.strip()]
+    phases = [p for p in PHASES if p[0] in wanted]
 
     cfg_raw = copy.deepcopy(cfg.hands)
     cfg_raw.handedness_swap = False  # queremos o rótulo bruto
@@ -64,9 +68,11 @@ def main() -> int:
     cv2.namedWindow(WIN, cv2.WINDOW_NORMAL)
     aborted = False
     with CameraSource(cfg.camera) as cam:
-        for key, instruction, duration in PHASES:
+        for key, instruction, duration in phases:
             raw_orig: Counter = Counter()
             raw_flip: Counter = Counter()
+            n_hands: Counter = Counter()
+            roles_seen: Counter = Counter()
             role_ok = role_total = 0
             t_start = time.perf_counter()
             while True:
@@ -87,7 +93,11 @@ def main() -> int:
                             raw_orig[hands[0].handedness_raw] += 1
                         if len(hands_f) == 1:
                             raw_flip[hands_f[0].handedness_raw] += 1
-                    elif len(hands_app) == 2:
+                    else:
+                        n_hands[len(hands_app)] += 1
+                        for h in hands_app:
+                            roles_seen[h.role] += 1
+                    if key == "violao" and len(hands_app) == 2:
                         # destro de frente p/ câmera, imagem original: a mão esquerda (braço do violão)
                         # aparece à DIREITA na imagem (x maior) -> deve ser a de "notas"
                         right_in_img = max(hands_app, key=lambda h: h.landmarks_px[WRIST, 0])
@@ -110,6 +120,7 @@ def main() -> int:
                     aborted = True
                     break
             results[key] = {"original": dict(raw_orig), "espelhada": dict(raw_flip),
+                            "maos_por_quadro": dict(n_hands), "papeis_vistos": dict(roles_seen),
                             "papel_ok": role_ok, "papel_total": role_total}
             if aborted:
                 break
@@ -123,23 +134,30 @@ def main() -> int:
     def majority(c: dict) -> str:
         return max(c, key=c.get) if c else "?"
 
-    print("\nRótulo bruto do MediaPipe (quadros com exatamente 1 mão):")
-    print(f"{'mão real':<10}{'imagem original':<28}{'imagem espelhada':<28}")
-    for key in ("esquerda", "direita"):
-        r = results[key]
-        print(f"{key:<10}{str(r['original']):<28}{str(r['espelhada']):<28}")
-    left_orig = majority(results["esquerda"]["original"])
-    right_orig = majority(results["direita"]["original"])
     swap = None
-    if left_orig.lower().startswith("r") and right_orig.lower().startswith("l"):
-        swap = True
-    elif left_orig.lower().startswith("l") and right_orig.lower().startswith("r"):
-        swap = False
-    r3 = results["violao"]
-    acc = r3["papel_ok"] / r3["papel_total"] if r3["papel_total"] else float("nan")
-    print(f"\nRecomendação: hands.handedness_swap = {swap}  (None = inconclusivo)")
-    print(f"Com o violão: papel correto em {r3['papel_ok']}/{r3['papel_total']} quadros com 2 mãos "
-          f"({100 * acc:.1f}%) usando handedness_swap={cfg.hands.handedness_swap}")
+    if "esquerda" in results and "direita" in results:
+        print("\nRótulo bruto do MediaPipe (quadros com exatamente 1 mão):")
+        print(f"{'mão real':<10}{'imagem original':<28}{'imagem espelhada':<28}")
+        for key in ("esquerda", "direita"):
+            r = results[key]
+            print(f"{key:<10}{str(r['original']):<28}{str(r['espelhada']):<28}")
+        left_orig = majority(results["esquerda"]["original"])
+        right_orig = majority(results["direita"]["original"])
+        if left_orig.lower().startswith("r") and right_orig.lower().startswith("l"):
+            swap = True
+        elif left_orig.lower().startswith("l") and right_orig.lower().startswith("r"):
+            swap = False
+        print(f"\nRecomendação: hands.handedness_swap = {swap}  (None = inconclusivo)")
+    acc = float("nan")
+    if "violao" in results:
+        r3 = results["violao"]
+        acc = r3["papel_ok"] / r3["papel_total"] if r3["papel_total"] else float("nan")
+        total = sum(r3["maos_por_quadro"].values())
+        dist = ", ".join(f"{k} mão(s): {v}" for k, v in sorted(r3["maos_por_quadro"].items()))
+        print(f"\nCom o violão ({total} quadros): {dist}")
+        print(f"  papéis vistos: {r3['papeis_vistos']}")
+        print(f"  papel correto em {r3['papel_ok']}/{r3['papel_total']} quadros com 2 mãos "
+              f"({100 * acc:.1f}%) usando handedness_swap={cfg.hands.handedness_swap}")
     out = Path("data/diag/handedness.json")
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps({"fases": results, "swap_recomendado": swap,

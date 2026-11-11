@@ -507,7 +507,7 @@ A 640×480 os valores caem pela metade. O erro esperado da ponta do dedo no Medi
 camera:   { index: 0, backend: dshow, width: 1280, height: 720, fps: 30, fourcc: MJPG,
             auto_exposure: false, exposure: -6, gain: null, latency_ms: 70 }
 display:  { mirror: true, debug: false }
-hands:    { max_hands: 2, min_conf: 0.5, handedness_swap: true, fretting: left }
+hands:    { max_hands: 2, min_conf: 0.5, handedness_swap: false, fretting: left }
 neck:     { locator: sam, tracker: lk, reseg_period_s: 2.0, iou_reset: 0.7,
             min_inliers: 25, lost_frames: 5, relock_timeout_s: 5.0,
             sam: { version: 3, prompts: ["guitar neck", "fretboard", "guitar"] } }
