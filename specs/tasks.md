@@ -58,19 +58,22 @@ Demonstração: o app abre a webcam, desenha uma grade fixa de bolinhas e os pon
     - Decisão: padrão **−6**; usar **−7** com boa luz frontal (menos *blur* em movimento). −4/−5 limitam o FPS.
     - Cuidado: trocar a exposição várias vezes com a câmera aberta travou a webcam (quadros pretos a 1 FPS, MSMF sem quadros) até ela ser reconectada. O código aplica as propriedades uma vez só, na abertura.
 
-- [ ] **T1.4 — Gravação e replay**
+- [x] **T1.4 — Gravação e replay** · concluída em 2026-11-11
+  - Evidência: `python -m ghirl.capture.recorder --out data/rec/t14_teste --seconds 20` → 596 quadros, 20,2 s, 29,5 FPS, 12 MB (MJPG q95); replay sequencial devolve os mesmos 596 quadros com `ts` idênticos. `tests/test_record_replay.py`: contagem/ts, determinismo, FFV1 sem perdas, modo tempo real com pulo de quadros, loop, vídeo comum sem timestamps.
   - Depende de: T1.3
   - Fazer: `Recorder` (vídeo sem perdas ou MJPG de alta qualidade + `timestamps.json` + metadados da câmera); `ReplaySource` com a mesma interface `FrameSource` (modo tempo real e modo "o mais rápido possível").
   - Pronto quando: gravar 20 s e reproduzir; teste confirma o mesmo número de quadros e os mesmos `ts`.
   - Ref.: RF-03, RF-71
 
-- [ ] **T1.5 — Laço principal + render com overlay fixo + HUD**
+- [x] **T1.5 — Laço principal + render com overlay fixo + HUD** · concluída em 2026-11-11
+  - Evidência: `python -m ghirl.app.main` (webcam), `--replay <pasta>` e `--record <pasta>`; teclas ESC/Q, D, M, H. Testes: a imagem processada não é alterada; exibição espelhada = `flip` da não espelhada (overlay desenhado no mundo, HUD depois do espelho). Conferência visual da janela fica para a demo T1.8.
   - Depende de: T1.3
   - Fazer: `app/main.py` com o laço (design §6, só as etapas 0, 8 e 9 por enquanto); grade fixa de bolinhas 6×12; HUD (FPS de captura e de processamento); espelhamento só na exibição; teclas (ESC, D = depuração).
   - Pronto quando: a grade aparece sobre o vídeo ao vivo e em replay; com o espelho ligado, a imagem exibida espelha e a processada não.
   - Ref.: RF-04, RF-40, RF-43, CA-04 (parte)
 
-- [ ] **T1.6 — Profiler e log JSONL**
+- [x] **T1.6 — Profiler e log JSONL** · concluída em 2026-11-11
+  - Evidência: tabela ao sair (média/P50/P95/máx por estágio). Webcam, 300 quadros: total 3,2 ms/quadro (overlay 2,1 + render 1,1), 1 quadro descartado. Replay, 596 quadros: 3,5 ms. JSONL em `logs/` lido por `tests/test_app_loop.py`.
   - Depende de: T1.5
   - Fazer: `utils/profiler.py` (cronômetro por estágio, P50/P95), log JSONL por quadro (índice, ts, estado, tempos); relatório ao sair.
   - Pronto quando: ao fechar o app, aparece a tabela de tempos por estágio; o JSONL é válido e lido por um teste.
