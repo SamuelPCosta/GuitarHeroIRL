@@ -6,7 +6,7 @@ Uso:
     python -m ghirl.app.main --replay data/rec/x --replay-mode sequential --no-window --max-frames 300
     python -m ghirl.app.main --record data/rec/y     # usa a webcam e grava a sessão
 
-Teclas: ESC/Q sai · D depuração (tempos por estágio) · M espelho · H HUD
+Teclas: ESC/Q sai · D depuração (tempos por estágio, máscara das mãos) · M espelho · H HUD
 """
 
 from __future__ import annotations
@@ -25,6 +25,8 @@ from ghirl.capture.base import Frame, FrameSource
 from ghirl.capture.camera import CameraSource, FpsMeter
 from ghirl.capture.recorder import Recorder
 from ghirl.capture.replay import ReplaySource
+from ghirl.hands.mp_tracker import HandTracker, hand_mask
+from ghirl.render.debug import draw_hands, draw_labels
 from ghirl.render.hud import draw_panel, hud_lines
 from ghirl.render.overlay import draw_fixed_grid
 from ghirl.utils.jsonl import JsonlLogger
@@ -37,9 +39,12 @@ KEY_ESC = 27
 
 class App:
     def __init__(self, cfg: Config, source: FrameSource, logger: JsonlLogger | None = None,
-                 recorder: Recorder | None = None, show: bool = True):
+                 recorder: Recorder | None = None, show: bool = True, hand_tracker=None):
         self.cfg = cfg
         self.source = source
+        self.hand_tracker = hand_tracker  # HandTracker ou None (sem detecção de mãos)
+        self.hands: list = []
+        self.hand_mask: np.ndarray | None = None
         self.logger = logger
         self.recorder = recorder
         self.show = show
@@ -59,13 +64,25 @@ class App:
         prof = self.profiler
         prof.begin_frame()
 
+        if self.hand_tracker is not None:
+            with prof.stage("maos"):
+                self.hands = self.hand_tracker.detect(frame)
+            with prof.stage("mascara"):
+                self.hand_mask = hand_mask(self.hands, frame.image.shape[:2])
+
+        labels = []
         with prof.stage("overlay"):
             # Overlay ancorado no mundo: sempre sobre a imagem NÃO espelhada.
             annotated = frame.image.copy()
             draw_fixed_grid(annotated)
+            if self.debug and self.hand_mask is not None:
+                tint = annotated[self.hand_mask > 0]
+                annotated[self.hand_mask > 0] = (tint * 0.6 + np.array([0, 0, 90])).astype(np.uint8)
+            labels = draw_hands(annotated, self.hands)
 
         with prof.stage("render"):
             view = cv2.flip(annotated, 1) if self.mirror else annotated
+            draw_labels(view, labels, self.mirror)
             if self.show_hud:
                 lines = hud_lines(self.state, self.source.fps_measured, self.proc_fps.fps,
                                   prof.last, self.debug)
@@ -78,8 +95,12 @@ class App:
         times = prof.end_frame()
         self.proc_fps.tick(time.perf_counter())  # vazão real do laço (relógio de parede)
         if self.logger is not None:
-            self.logger.write({"frame": frame.index, "ts": round(frame.ts, 6), "state": self.state,
-                               "t_ms": {k: round(v, 3) for k, v in times.items()}})
+            self.logger.write({
+                "frame": frame.index, "ts": round(frame.ts, 6), "state": self.state,
+                "hands": [{"side": h.side, "role": h.role, "raw": h.handedness_raw,
+                           "score": round(h.score, 3)} for h in self.hands],
+                "t_ms": {k: round(v, 3) for k, v in times.items()},
+            })
         self.frames += 1
         return view
 
@@ -140,6 +161,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--record", help="grava a sessão nesta pasta (só com webcam)")
     parser.add_argument("--max-frames", type=int)
     parser.add_argument("--no-window", action="store_true")
+    parser.add_argument("--no-hands", action="store_true", help="desliga o MediaPipe")
     args = parser.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
     cfg = config_from_args(args)
@@ -148,7 +170,10 @@ def main(argv: list[str] | None = None) -> int:
     source.start()
     logger = JsonlLogger.in_dir(cfg.log.dir) if cfg.log.jsonl else None
     recorder = None
+    hand_tracker = None
     try:
+        if not args.no_hands:
+            hand_tracker = HandTracker(cfg.hands)
         if args.record:
             if args.replay:
                 parser.error("--record só funciona com a webcam")
@@ -160,10 +185,13 @@ def main(argv: list[str] | None = None) -> int:
             if isinstance(source, CameraSource) and source.settings is not None:
                 info |= {"requested": source.settings.requested, "actual": source.settings.actual}
             recorder = Recorder(args.record, cfg.camera.fps, (w, h), camera_info=info)
-        app = App(cfg, source, logger=logger, recorder=recorder, show=not args.no_window)
+        app = App(cfg, source, logger=logger, recorder=recorder, show=not args.no_window,
+                  hand_tracker=hand_tracker)
         n = app.run(max_frames=args.max_frames)
     finally:
         source.stop()
+        if hand_tracker is not None:
+            hand_tracker.close()
         if recorder is not None:
             recorder.close()
         if logger is not None:

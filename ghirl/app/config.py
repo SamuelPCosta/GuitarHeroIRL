@@ -54,7 +54,7 @@ class DisplayConfig:
 class HandsConfig:
     max_hands: int = 2
     min_conf: float = 0.5
-    handedness_mirrored_input: bool = False  # definido empiricamente na T1.7
+    handedness_swap: bool = True  # inverte o rótulo do MediaPipe (que supõe imagem espelhada); T1.7
     fretting: Literal["left", "right"] = "left"
     model_path: str = "models/hand_landmarker.task"
 

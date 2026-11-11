@@ -81,9 +81,11 @@ Demonstração: o app abre a webcam, desenha uma grade fixa de bolinhas e os pon
 
 - [ ] **T1.7 — Mãos com MediaPipe + verificação de lateralidade**
   - Depende de: T1.5
-  - Fazer: `HandLandmarker` em modo VIDEO; desenhar os 21 pontos; máscara das mãos (casco convexo dilatado); **experimento**: com imagem espelhada e não espelhada, levantar só a mão esquerda e registrar o rótulo retornado; definir `handedness_mirrored_input`; papel provisório pelo rótulo corrigido.
+  - Fazer: `HandLandmarker` em modo VIDEO; desenhar os 21 pontos; máscara das mãos (casco convexo dilatado); **experimento**: com imagem espelhada e não espelhada, levantar só a mão esquerda e registrar o rótulo retornado; definir `handedness_swap`; papel provisório pelo rótulo corrigido.
   - Pronto quando: tabela "entrada espelhada? × mão real → rótulo" preenchida aqui; com a configuração correta, a mão esquerda real é rotulada "notas" em ≥ 95% de 300 quadros.
   - Ref.: RF-10, RF-11 (provisório), RF-13, K5
+  - **Em andamento (2026-11-11)** — código pronto: `ghirl/hands/mp_tracker.py` (MediaPipe 1.2.2, modelo `models/hand_landmarker.task`), máscara das mãos (0,3 ms), desenho e rótulos legíveis com espelho, integração no laço (`--no-hands` desliga). Webcam, 300 quadros: MediaPipe 17,2 ms em média (P95 22 ms); total 20,9 ms/quadro (~48 FPS de processamento; limitado a 30 pela câmera). Chave renomeada para `hands.handedness_swap` (padrão `true`, a confirmar).
+  - Pendente (precisa do usuário): rodar `python -m ghirl.hands.handedness_check` e anotar a tabela aqui.
 
 - [ ] **T1.8 — Demo do Marco 1**
   - Depende de: T1.4, T1.6, T1.7

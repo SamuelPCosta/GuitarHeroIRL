@@ -22,7 +22,7 @@ display:
 hands:
   max_hands: 2
   min_conf: 0.5
-  handedness_mirrored_input: false   # definido na T1.7
+  handedness_swap: true   # inverte o rótulo do MediaPipe (ele supõe imagem espelhada); confirmar na T1.7
   fretting: left                     # mão que faz as notas (destro = left)
   model_path: models/hand_landmarker.task
 

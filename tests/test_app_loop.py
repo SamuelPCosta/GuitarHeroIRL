@@ -123,7 +123,7 @@ def test_cli_replay_headless(tmp_path, capsys):
     with Recorder(rec_dir, fps=30, size=(W, H)) as rec:
         for f in make_frames(15):
             rec.write(f)
-    rc = main(["--replay", str(rec_dir), "--replay-mode", "sequential", "--no-window",
+    rc = main(["--replay", str(rec_dir), "--replay-mode", "sequential", "--no-window", "--no-hands",
                "--set", f"log.dir={(tmp_path / 'logs').as_posix()}"])
     assert rc == 0
     out = capsys.readouterr().out
