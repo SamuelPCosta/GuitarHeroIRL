@@ -291,11 +291,16 @@ A medida de cada pestana é a coordenada s_i (em K) do ponto em que o indicador 
 
 O sinal de L_px define o sentido do braço (e é verificado contra `nut_side_hint`).
 
-**Problema de perspectiva.** A projeção de um segmento num plano inclinado não é afim. Com o trecho nut → 12 de comprimento ℓ ≈ 325 mm a uma distância Z da câmera e guinada θ, o erro máximo do modelo afim (no meio do trecho, em unidades físicas) é aproximadamente
+**Problema de perspectiva.** A projeção de um segmento num plano inclinado não é afim. Com o trecho nut → 12 de comprimento ℓ ≈ 325 mm a uma distância Z da câmera e guinada θ, o erro do modelo afim é máximo no meio do trecho. A cota grosseira é e_max ≲ (ℓ²/4) · sin θ / Z.
 
-  e_max ≈ (ℓ²/4) · sin θ / Z.
+Simulação exata (T3.2: projeção com Z = 0,8 m, escala 648 mm, β = 0,75, afim ajustado pelas pestanas 1 e 12), com o erro máximo sempre perto do traste 5, onde a casa mede ~29 mm:
 
-Para Z = 0,8 m: θ = 10° → ~6 mm; θ = 15° → ~9 mm; θ = 30° → ~17 mm, enquanto a casa 6 mede ~27 mm. **Uma guinada de 15–30° já tira o meio do braço de 1/3 a 2/3 de casa do lugar.** Por isso o design propõe:
+| Guinada θ | 5° | 10° | 15° | 20° | 30° | 40° |
+|---|---|---|---|---|---|---|
+| Erro máx. (mm) | 2,2 | 4,1 | 5,9 | 7,4 | 9,9 | 11,7 |
+| Em fração da casa | 0,08 | 0,14 | 0,20 | 0,26 | 0,34 | 0,41 |
+
+(A versão 0.2 deste documento usava a cota grosseira e superestimava: ~17 mm a 30°.) **O afim de 2 pontos fica dentro da meta RNF-04 (≤ 0,25 casa) até ~20° de guinada.** Acima disso, há duas opções:
 
 **Modelo projetivo 1D (3 pontos: casas 1, 5 e 12)** — homografia da reta:
 
@@ -305,7 +310,7 @@ Cada medida (g_i, s_i) dá uma equação **linear** nas incógnitas: a·g_i + b 
 
 **Modelo 2 pontos + afunilamento** (alternativa sem 3ª pestana, a avaliar): sob a homografia, a ampliação local transversal é proporcional a 1/(c·g + 1). Com as larguras medidas nas bordas de K em g_dedo(1) e g_dedo(12) e a razão física de largura conhecida (aço: ≈ 43 → 54 mm; configurável), estimamos c. O resultado depende da qualidade das bordas e da precisão do afunilamento informado.
 
-**Decisão:** padrão **2 pontos (casas 1 → 12)**, como na ideia original. Com o violão de frente para a câmera (posição recomendada, §7.5) o modelo afim basta: guinada ≤ ~10° dá erro ≤ ~6 mm, cerca de 1/4 de casa no meio do braço, dentro da meta RNF-04. O modo 3 pontos (pestana extra na casa 5) e o 2p+afunilamento ficam como opções de configuração (`calib.mode`), e evaluation §5.3 mede quanto ganham quando o violão gira.
+**Decisão:** padrão **2 pontos (casas 1 → 12)**, como na ideia original. Com o violão de frente para a câmera (posição recomendada, §7.5) o modelo afim basta: até ~20° de guinada o erro fica ≤ 0,26 casa (tabela acima), dentro da meta RNF-04. O modo 3 pontos (pestana extra na casa 5) e o 2p+afunilamento ficam como opções de configuração (`calib.mode`), e evaluation §5.3 mede quanto ganham quando o violão gira.
 
 Inverso (imagem → g): afim g = (s − s₀)/L_px; projetivo g = (s − b)/(a − c·s).
 

@@ -195,17 +195,63 @@ class FeatureTracker:
         self._pts_k = np.vstack([self._pts_k, new_k])
         self._pts_cur = np.vstack([self._pts_cur, new])
 
+    def relocalize(self, frame: Frame, exclude_mask: np.ndarray | None = None,
+                   min_inliers: int = 30) -> NeckPose | None:
+        """Reencontra o braço por ORB contra o quadro-chave (T2.7, versão mínima).
+
+        Se der certo, reinicia os pontos rastreados no quadro atual e devolve a pose; senão, None.
+        """
+        kf = self.keyframe
+        if kf is None or kf.orb_descriptors is None or len(kf.orb_keypoints) < min_inliers:
+            return None
+        gray = to_gray(frame.image)
+        orb = _orb()
+        kps, des = orb.detectAndCompute(gray, None)
+        if des is None or len(kps) < min_inliers:
+            return None
+        matches = cv2.BFMatcher(cv2.NORM_HAMMING).knnMatch(kf.orb_descriptors, des, k=2)
+        good = [m for m, *rest in matches if rest and m.distance < 0.75 * rest[0].distance]
+        if len(good) < min_inliers:
+            return None
+        src = np.float32([kf.orb_keypoints[m.queryIdx] for m in good])
+        dst = np.float32([kps[m.trainIdx].pt for m in good])
+        cv2.setRNGSeed(0)
+        H, inl = cv2.findHomography(src, dst, cv2.RANSAC, 4.0)
+        if H is None or int(inl.sum()) < min_inliers:
+            return None
+        scale = homography_scale(H, src.mean(axis=0))
+        if not (self.p.scale_range[0] <= scale <= self.p.scale_range[1]):
+            return None
+        # reinicia os pontos LK na região do braço projetada
+        self.H = H
+        self._pts_k = np.empty((0, 2), np.float32)
+        self._pts_cur = np.empty((0, 2), np.float32)
+        self._replenish(gray, H, exclude_mask)
+        self._prev_gray = gray
+        pose = NeckPose(frame.index, H, 0.5, int(inl.sum()), 0.0, "degradado", {"relocalized": True})
+        self.last_pose = pose
+        return pose
+
     @property
     def points(self) -> tuple[np.ndarray, np.ndarray]:
         """(pontos em K, pontos no quadro atual) — para depuração."""
         return self._pts_k, self._pts_cur
 
 
-def build_keyframe(frame: Frame, detection, erode_px: int = 4) -> Keyframe:
+def _orb():
+    return cv2.ORB_create(nfeatures=1500, scaleFactor=1.2, nlevels=8, fastThreshold=12)
+
+
+def build_keyframe(frame: Frame, detection, erode_px: int = 4, exclude_mask: np.ndarray | None = None) -> Keyframe:
     """Quadro-chave a partir de uma detecção: região rastreável = violão (máscara completa, erodida
-    para evitar pontos na fronteira com o fundo)."""
+    para evitar pontos na fronteira com o fundo), menos as mãos; com descritores ORB para relocalizar."""
     mask = detection.full_mask if detection.full_mask is not None else detection.mask
     m = (mask > 0).astype(np.uint8) * 255
     if erode_px > 0:
         m = cv2.erode(m, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2 * erode_px + 1, 2 * erode_px + 1)))
-    return Keyframe(frame_index=frame.index, gray=to_gray(frame.image), detection=detection, track_mask=m)
+    if exclude_mask is not None:
+        m[exclude_mask > 0] = 0
+    gray = to_gray(frame.image)
+    kps, des = _orb().detectAndCompute(gray, m)
+    return Keyframe(frame_index=frame.index, gray=gray, detection=detection, track_mask=m,
+                    orb_keypoints=tuple(k.pt for k in kps), orb_descriptors=des)
