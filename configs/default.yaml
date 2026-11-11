@@ -1,0 +1,67 @@
+# Configuração padrão do Guitar Hero IRL (design §12).
+# Sobrescreva na linha de comando com:  --set secao.chave=valor
+# Mantenha em sincronia com ghirl/app/config.py (há um teste que compara os dois).
+
+camera:
+  index: 0              # índice da webcam
+  backend: dshow        # dshow | msmf | any
+  width: 1280
+  height: 720
+  fps: 30
+  fourcc: MJPG
+  auto_exposure: false  # false = tenta fixar a exposição (reduz blur e oscilação de FPS)
+  exposure: -6.0        # DSHOW: log2 de segundos (-6 ≈ 1/64 s, -7 ≈ 1/128 s)
+  gain: null            # null = não altera
+  latency_ms: 70.0      # latência estimada da câmera (medida na T5.10)
+
+display:
+  mirror: true          # espelha só a exibição
+  debug: false
+  window_name: Guitar Hero IRL
+
+hands:
+  max_hands: 2
+  min_conf: 0.5
+  handedness_mirrored_input: false   # definido na T1.7
+  fretting: left                     # mão que faz as notas (destro = left)
+  model_path: models/hand_landmarker.task
+
+neck:
+  locator: sam          # sam | yolo | classic
+  tracker: lk           # lk | sam2video | per_frame
+  reseg_period_s: 2.0
+  iou_reset: 0.7
+  min_inliers: 25
+  lost_frames: 5
+  relock_timeout_s: 5.0
+  sam:
+    version: 3
+    prompts: [guitar neck, fretboard, guitar]
+
+calib:
+  mode: 2p              # 2p | 2p_taper | 3p
+  frets: [1, 12]        # casas da pestana (3p: [1, 12, 5])
+  beta: 0.75            # posição do dedo dentro da casa (0 = traste anterior, 1 = traste da casa)
+  hold_s: 1.0
+  scale_mm: 648.0       # Tagima Dallas (a medir)
+  width_nut_mm: 43.0
+  width_12_mm: 54.0
+  string_margin: 0.09
+  bass_edge: top        # borda dos bordões na imagem
+
+game:
+  lead_s: 1.5
+  style: ring           # ring | slide
+  w_before_ms: 600.0
+  w_after_ms: 200.0
+  eps_fret: 0.15
+  string_mode: zones    # zones | exact
+  eps_string: 0.5
+  debounce_frames: 2
+  contact_gamma: 0.2
+  user_offset_ms: 0.0
+  count_in_beats: 4
+
+log:
+  jsonl: true
+  dir: logs
