@@ -1,0 +1,122 @@
+{
+ "nome": "Escala maior de Dó (casa 8) — sobe e desce",
+ "descricao": "Forma com a tônica na corda 6, casa 8.",
+ "notas": [
+  {
+   "corda": 6,
+   "casa": 8
+  },
+  {
+   "corda": 6,
+   "casa": 10
+  },
+  {
+   "corda": 5,
+   "casa": 7
+  },
+  {
+   "corda": 5,
+   "casa": 8
+  },
+  {
+   "corda": 5,
+   "casa": 10
+  },
+  {
+   "corda": 4,
+   "casa": 7
+  },
+  {
+   "corda": 4,
+   "casa": 9
+  },
+  {
+   "corda": 4,
+   "casa": 10
+  },
+  {
+   "corda": 3,
+   "casa": 7
+  },
+  {
+   "corda": 3,
+   "casa": 9
+  },
+  {
+   "corda": 3,
+   "casa": 10
+  },
+  {
+   "corda": 2,
+   "casa": 8
+  },
+  {
+   "corda": 2,
+   "casa": 10
+  },
+  {
+   "corda": 1,
+   "casa": 7
+  },
+  {
+   "corda": 1,
+   "casa": 8
+  },
+  {
+   "corda": 1,
+   "casa": 7
+  },
+  {
+   "corda": 2,
+   "casa": 10
+  },
+  {
+   "corda": 2,
+   "casa": 8
+  },
+  {
+   "corda": 3,
+   "casa": 10
+  },
+  {
+   "corda": 3,
+   "casa": 9
+  },
+  {
+   "corda": 3,
+   "casa": 7
+  },
+  {
+   "corda": 4,
+   "casa": 10
+  },
+  {
+   "corda": 4,
+   "casa": 9
+  },
+  {
+   "corda": 4,
+   "casa": 7
+  },
+  {
+   "corda": 5,
+   "casa": 10
+  },
+  {
+   "corda": 5,
+   "casa": 8
+  },
+  {
+   "corda": 5,
+   "casa": 7
+  },
+  {
+   "corda": 6,
+   "casa": 10
+  },
+  {
+   "corda": 6,
+   "casa": 8
+  }
+ ]
+}

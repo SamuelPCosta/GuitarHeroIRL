@@ -1,0 +1,114 @@
+{
+ "nome": "Escala blues de Lá (casa 5) — sobe e desce",
+ "descricao": "Pentatônica de Lá menor com a blue note (Ré#/Mib).",
+ "notas": [
+  {
+   "corda": 6,
+   "casa": 5
+  },
+  {
+   "corda": 6,
+   "casa": 8
+  },
+  {
+   "corda": 5,
+   "casa": 5
+  },
+  {
+   "corda": 5,
+   "casa": 6
+  },
+  {
+   "corda": 5,
+   "casa": 7
+  },
+  {
+   "corda": 4,
+   "casa": 5
+  },
+  {
+   "corda": 4,
+   "casa": 7
+  },
+  {
+   "corda": 3,
+   "casa": 5
+  },
+  {
+   "corda": 3,
+   "casa": 7
+  },
+  {
+   "corda": 3,
+   "casa": 8
+  },
+  {
+   "corda": 2,
+   "casa": 5
+  },
+  {
+   "corda": 2,
+   "casa": 8
+  },
+  {
+   "corda": 1,
+   "casa": 5
+  },
+  {
+   "corda": 1,
+   "casa": 8
+  },
+  {
+   "corda": 1,
+   "casa": 5
+  },
+  {
+   "corda": 2,
+   "casa": 8
+  },
+  {
+   "corda": 2,
+   "casa": 5
+  },
+  {
+   "corda": 3,
+   "casa": 8
+  },
+  {
+   "corda": 3,
+   "casa": 7
+  },
+  {
+   "corda": 3,
+   "casa": 5
+  },
+  {
+   "corda": 4,
+   "casa": 7
+  },
+  {
+   "corda": 4,
+   "casa": 5
+  },
+  {
+   "corda": 5,
+   "casa": 7
+  },
+  {
+   "corda": 5,
+   "casa": 6
+  },
+  {
+   "corda": 5,
+   "casa": 5
+  },
+  {
+   "corda": 6,
+   "casa": 8
+  },
+  {
+   "corda": 6,
+   "casa": 5
+  }
+ ]
+}

@@ -1,0 +1,126 @@
+{
+ "nome": "Ode à Alegria (Beethoven)",
+ "descricao": "Melodia em Dó maior, cordas 4 a 2, casas 7 a 10. Domínio público.",
+ "notas": [
+  {
+   "corda": 3,
+   "casa": 9
+  },
+  {
+   "corda": 3,
+   "casa": 9
+  },
+  {
+   "corda": 3,
+   "casa": 10
+  },
+  {
+   "corda": 2,
+   "casa": 8
+  },
+  {
+   "corda": 2,
+   "casa": 8
+  },
+  {
+   "corda": 3,
+   "casa": 10
+  },
+  {
+   "corda": 3,
+   "casa": 9
+  },
+  {
+   "corda": 3,
+   "casa": 7
+  },
+  {
+   "corda": 4,
+   "casa": 10
+  },
+  {
+   "corda": 4,
+   "casa": 10
+  },
+  {
+   "corda": 3,
+   "casa": 7
+  },
+  {
+   "corda": 3,
+   "casa": 9
+  },
+  {
+   "corda": 3,
+   "casa": 9
+  },
+  {
+   "corda": 3,
+   "casa": 7
+  },
+  {
+   "corda": 3,
+   "casa": 7
+  },
+  {
+   "corda": 3,
+   "casa": 9
+  },
+  {
+   "corda": 3,
+   "casa": 9
+  },
+  {
+   "corda": 3,
+   "casa": 10
+  },
+  {
+   "corda": 2,
+   "casa": 8
+  },
+  {
+   "corda": 2,
+   "casa": 8
+  },
+  {
+   "corda": 3,
+   "casa": 10
+  },
+  {
+   "corda": 3,
+   "casa": 9
+  },
+  {
+   "corda": 3,
+   "casa": 7
+  },
+  {
+   "corda": 4,
+   "casa": 10
+  },
+  {
+   "corda": 4,
+   "casa": 10
+  },
+  {
+   "corda": 3,
+   "casa": 7
+  },
+  {
+   "corda": 3,
+   "casa": 9
+  },
+  {
+   "corda": 3,
+   "casa": 7
+  },
+  {
+   "corda": 4,
+   "casa": 10
+  },
+  {
+   "corda": 4,
+   "casa": 10
+  }
+ ]
+}

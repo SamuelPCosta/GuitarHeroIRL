@@ -1,0 +1,98 @@
+{
+ "nome": "Pentatônica de Lá menor, forma 2 (casas 7–10) — sobe e desce",
+ "descricao": "Continuação da forma 1 (casa 5), subindo pelo braço.",
+ "notas": [
+  {
+   "corda": 6,
+   "casa": 8
+  },
+  {
+   "corda": 6,
+   "casa": 10
+  },
+  {
+   "corda": 5,
+   "casa": 7
+  },
+  {
+   "corda": 5,
+   "casa": 10
+  },
+  {
+   "corda": 4,
+   "casa": 7
+  },
+  {
+   "corda": 4,
+   "casa": 10
+  },
+  {
+   "corda": 3,
+   "casa": 7
+  },
+  {
+   "corda": 3,
+   "casa": 9
+  },
+  {
+   "corda": 2,
+   "casa": 8
+  },
+  {
+   "corda": 2,
+   "casa": 10
+  },
+  {
+   "corda": 1,
+   "casa": 8
+  },
+  {
+   "corda": 1,
+   "casa": 10
+  },
+  {
+   "corda": 1,
+   "casa": 8
+  },
+  {
+   "corda": 2,
+   "casa": 10
+  },
+  {
+   "corda": 2,
+   "casa": 8
+  },
+  {
+   "corda": 3,
+   "casa": 9
+  },
+  {
+   "corda": 3,
+   "casa": 7
+  },
+  {
+   "corda": 4,
+   "casa": 10
+  },
+  {
+   "corda": 4,
+   "casa": 7
+  },
+  {
+   "corda": 5,
+   "casa": 10
+  },
+  {
+   "corda": 5,
+   "casa": 7
+  },
+  {
+   "corda": 6,
+   "casa": 10
+  },
+  {
+   "corda": 6,
+   "casa": 8
+  }
+ ]
+}
