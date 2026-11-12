@@ -1,24 +1,13 @@
 [project]
 name = "ghirl"
-version = "0.1.0"
-description = "Guitar Hero IRL: overlay de casas do violão em tempo real e jogo rítmico por visão computacional"
+version = "0.2.0"
+description = "Guitar Hero IRL: notas sobre o braço do violão em tempo real, por visão computacional"
 requires-python = ">=3.12,<3.13"
 
-[build-system]
-requires = ["setuptools>=68"]
-build-backend = "setuptools.build_meta"
-
-[tool.setuptools.packages.find]
-include = ["ghirl*"]
-
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["."]
+python_files = ["test_ghirl.py"]
 pythonpath = ["."]
-markers = [
-    "replay: testes de integração que dependem de gravações em data/ (lentos)",
-    "gpu: testes que exigem CUDA",
-]
-addopts = "-m 'not replay'"
 
 [tool.ruff]
 line-length = 120

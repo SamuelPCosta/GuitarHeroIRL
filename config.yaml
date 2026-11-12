@@ -1,0 +1,57 @@
+# Configuração do Guitar Hero IRL. Sobrescreva na linha de comando com --set secao.chave=valor.
+# Deve coincidir com os padrões de ghirl/config.py (um teste compara).
+
+camera:
+  index: 0
+  backend: dshow        # dshow | msmf | any
+  width: 1280
+  height: 720
+  fps: 30
+  fourcc: MJPG
+  auto_exposure: false
+  exposure: -6.0        # DSHOW: log2 de segundos (-6 ≈ 1/64 s)
+  gain: null
+
+display:
+  mirror: true
+  debug: false          # pontos rastreados e esqueleto das mãos
+  show_frets: false     # trastes e todas as notas do exercício (baixa opacidade)
+  smooth: true          # filtro One Euro: a nota não treme com o violão parado
+  smooth_min_cutoff: 1.0  # Hz; menor = mais suave parado
+  smooth_beta: 0.1      # maior = menos atraso quando o violão se mexe
+
+hands:
+  max_hands: 2
+  min_conf: 0.5
+  model_path: models/hand_landmarker.task
+
+gestures:
+  enabled: true
+  advance_max_s: 1.5    # fechar e abrir a mão = avançar
+  reset_hold_s: 3.0     # mão fechada 3 s = recomeçar a calibração
+
+neck:
+  lost_frames: 5
+  rekey_after_s: 2.0   # violão visível mas sem casar com o quadro-chave por X s: quadro-chave novo
+
+calib:
+  frets: [1, 12]        # casas das pestanas
+  beta: 0.75            # posição do dedo dentro da casa
+  refine_frets: true    # ajusta a escala pelos trastes visíveis
+  string_margin: 0.09
+  bass_edge: top        # borda dos bordões na imagem
+
+game:
+  exercises_dir: exercises
+  exercise: pentatonica_am_casa5
+  hold_frames: 2
+  eps_fret: 0.25
+  eps_string: 0.5
+  require_pluck: true   # a nota só vale com um dedo da outra mão tocando a corda
+  pluck_window_s: 0.35
+  pluck_min_fret: 13.0
+  pluck_direction: down # down = dedo descendo pela corda (em direção ao chão) | any
+
+log:
+  jsonl: false
+  dir: logs

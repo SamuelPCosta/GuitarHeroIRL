@@ -1,0 +1,12 @@
+{
+  "nome": "Cromático 1-2-3-4 (casas 5 a 8)",
+  "descricao": "Um dedo por casa, da corda 6 até a corda 1.",
+  "notas": [
+    {"corda": 6, "casa": 5}, {"corda": 6, "casa": 6}, {"corda": 6, "casa": 7}, {"corda": 6, "casa": 8},
+    {"corda": 5, "casa": 5}, {"corda": 5, "casa": 6}, {"corda": 5, "casa": 7}, {"corda": 5, "casa": 8},
+    {"corda": 4, "casa": 5}, {"corda": 4, "casa": 6}, {"corda": 4, "casa": 7}, {"corda": 4, "casa": 8},
+    {"corda": 3, "casa": 5}, {"corda": 3, "casa": 6}, {"corda": 3, "casa": 7}, {"corda": 3, "casa": 8},
+    {"corda": 2, "casa": 5}, {"corda": 2, "casa": 6}, {"corda": 2, "casa": 7}, {"corda": 2, "casa": 8},
+    {"corda": 1, "casa": 5}, {"corda": 1, "casa": 6}, {"corda": 1, "casa": 7}, {"corda": 1, "casa": 8}
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "nome": "Pentatônica de Lá menor (casa 5) — sobe e desce",
+  "descricao": "Forma 1 da pentatônica menor a partir da casa 5. Corda 6 = Mi grave, corda 1 = Mi agudo.",
+  "notas": [
+    {"corda": 6, "casa": 5}, {"corda": 6, "casa": 8},
+    {"corda": 5, "casa": 5}, {"corda": 5, "casa": 7},
+    {"corda": 4, "casa": 5}, {"corda": 4, "casa": 7},
+    {"corda": 3, "casa": 5}, {"corda": 3, "casa": 7},
+    {"corda": 2, "casa": 5}, {"corda": 2, "casa": 8},
+    {"corda": 1, "casa": 5}, {"corda": 1, "casa": 8},
+    {"corda": 1, "casa": 5},
+    {"corda": 2, "casa": 8}, {"corda": 2, "casa": 5},
+    {"corda": 3, "casa": 7}, {"corda": 3, "casa": 5},
+    {"corda": 4, "casa": 7}, {"corda": 4, "casa": 5},
+    {"corda": 5, "casa": 7}, {"corda": 5, "casa": 5},
+    {"corda": 6, "casa": 8}, {"corda": 6, "casa": 5}
+  ]
+}

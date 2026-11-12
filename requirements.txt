@@ -1,12 +1,13 @@
-# Dependências diretas (versões fixadas, testadas em Windows 10 + Python 3.12).
-# NÃO adicionar opencv-python: o mediapipe já traz opencv-contrib-python.
+# Instalar com:  uv pip install -r requirements.txt --override overrides.txt
+# (overrides.txt impede o opencv-python, que conflita com o opencv-contrib-python do mediapipe)
+--extra-index-url https://download.pytorch.org/whl/cu128
+torch==2.11.0+cu128
+torchvision==0.26.0+cu128
 mediapipe==1.2.2
 opencv-contrib-python==5.0.0.93
-ultralytics==8.4.210     # SAM 2.1 / SAM 3 / YOLOE (instalar com --override overrides.txt)
-psutil==7.2.2
-httpx==0.28.1
-charset-normalizer==3.5.2
+ultralytics==8.4.210
 numpy==2.5.4
 pyyaml==6.0.3
+PySide6-Essentials==6.12.0
 pytest==9.2.0
 ruff==0.17.4
